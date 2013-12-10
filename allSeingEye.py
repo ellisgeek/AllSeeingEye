@@ -8,62 +8,67 @@ Elliott Saille
 from subprocess import call
 from os import name
 from os import system
+from os import access
+from os import R_OK
+from os import W_OK
 from shutil import copy2
+
+#Variables
+tnsnames = "C:\\oracle\\product\\10.2.0\\client\\NETWORK\\ADMIN\\tnsnames.ora"
 
 def confirm(prompt=None, resp=False):
     """prompts for yes or no response from the user. Returns True for yes and
     False for no.
 
-    'resp' should be set to the default value assumed by the caller when
+    "resp" should be set to the default value assumed by the caller when
     user simply types ENTER.
 
-    >>> confirm(prompt='Create Directory?', resp=True)
+    >>> confirm(prompt="Create Directory?", resp=True)
     Create Directory? [y]|n: 
     True
-    >>> confirm(prompt='Create Directory?', resp=False)
+    >>> confirm(prompt="Create Directory?", resp=False)
     Create Directory? [n]|y: 
     False
-    >>> confirm(prompt='Create Directory?', resp=False)
+    >>> confirm(prompt="Create Directory?", resp=False)
     Create Directory? [n]|y: y
     True
 
     """
     
     if prompt is None:
-        prompt = 'Confirm'
+        prompt = "Confirm"
 
     if resp:
-        prompt = '%s [%s]|%s: ' % (prompt, 'y', 'n')
+        prompt = "%s [%s]|%s: " % (prompt, "y", "n")
     else:
-        prompt = '%s [%s]|%s: ' % (prompt, 'n', 'y')
+        prompt = "%s [%s]|%s: " % (prompt, "n", "y")
         
     while True:
         ans = input(prompt)
         if not ans:
             return resp
-        if ans not in ['y', 'Y', 'n', 'N']:
+        if ans not in ["y", "Y", "n", "N"]:
             print("please enter y or n.")
             continue
-        if ans == 'y' or ans == 'Y':
+        if ans == "y" or ans == "Y":
             return True
-        if ans == 'n' or ans == 'N':
+        if ans == "n" or ans == "N":
             return False
 
 def backup():
-    location = "C:\oracle\product\10.2.0\client\NETWORK\ADMIN\tnsnames.ora"
+    clear()
     print("Backing up current tnsnames.ora")
-    
-    print("from %s" % location
+    if access(tnsnames, R_OK) == True:
+        print("from %s" % tnsnames)
+    else:
+        print("Unable to access tnsnames.ora at %s" % tnanames)
     
 
     confirm("Return To main Menu?", True)
     mainMenu()
 
-def end():
-    quit()
-
 def clear():
-    system('cls' if name=='nt' else 'clear')
+    system("cls")
     
 def mainMenu():
     clear()
@@ -85,7 +90,8 @@ def mainMenu():
     elif choise == "4":
         print("2")
     elif choise == "Q" or choise == "q":
-        end()
+        quit()
+    clear()
     print("Please make a selection!")
     confirm("Return To main Menu?", True)
     mainMenu()
