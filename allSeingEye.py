@@ -11,10 +11,23 @@ from os import system
 from os import access
 from os import R_OK
 from os import W_OK
+from os import makedirs
+from os import path
+from os import environ
+from shutil import rmtree
 from shutil import copy2
+from sys import exit
 
 #Variables
+"""
+tempDir  = environ["TEMP"] + "\\allSeeingEye"
 tnsnames = "C:\\oracle\\product\\10.2.0\\client\\NETWORK\\ADMIN\\tnsnames.ora"
+tnsnamesTemp = tempDir + "\tnsnames.ora"
+"""
+tempDir  = environ["TEMP"] + "/allSeeingEye"
+tnsnamesTemp = tempDir + "/tnsnames.ora"
+tnsnames = "C:/oracle/product/10.2.0/client/NETWORK/ADMIN/tnsnames.ora"
+
 
 def confirm(prompt=None, resp=False):
     """prompts for yes or no response from the user. Returns True for yes and
@@ -22,17 +35,6 @@ def confirm(prompt=None, resp=False):
 
     "resp" should be set to the default value assumed by the caller when
     user simply types ENTER.
-
-    >>> confirm(prompt="Create Directory?", resp=True)
-    Create Directory? [y]|n: 
-    True
-    >>> confirm(prompt="Create Directory?", resp=False)
-    Create Directory? [n]|y: 
-    False
-    >>> confirm(prompt="Create Directory?", resp=False)
-    Create Directory? [n]|y: y
-    True
-
     """
     
     if prompt is None:
@@ -55,20 +57,26 @@ def confirm(prompt=None, resp=False):
         if ans == "n" or ans == "N":
             return False
 
-def backup():
-    clear()
-    print("Backing up current tnsnames.ora")
-    if access(tnsnames, R_OK) == True:
-        print("from %s" % tnsnames)
-    else:
-        print("Unable to access tnsnames.ora at %s" % tnanames)
-    
-
-    confirm("Return To main Menu?", True)
-    mainMenu()
-
 def clear():
     system("cls")
+    
+def backup():
+    clear()
+    print("Backing up current tnsnames.ora from:")
+    print(tnsnames)
+    if access(tnsnames, R_OK) == True:
+        try:
+            copy2(tnsnames, tnsnamesTemp)
+        except IOError as e:
+            print("({})".format(e))
+        else:
+         print("\nBackup Complete!\n")
+    else:
+        clear()
+        print("Unable to access tnsnames.ora at:")
+        print(tnsnames)
+    confirm("Return To main Menu?", True)
+    mainMenu()
     
 def mainMenu():
     clear()
@@ -90,10 +98,31 @@ def mainMenu():
     elif choise == "4":
         print("2")
     elif choise == "Q" or choise == "q":
+        clear()
         quit()
     clear()
     print("Please make a selection!")
     confirm("Return To main Menu?", True)
     mainMenu()
+
+#Clean up and Create Temp Dir for session
+if path.exists(tempDir):
+    print ("Old temp directory found at %s" % tempDir)
+    if confirm("Remove Temp Directory?", True) == True:
+        try:
+            rmtree(tempDir)
+        except IOError as e:
+            print("({})".format(e))
+        try:
+            makedirs(tempDir)
+        except IOError as e:
+            print("({})".format(e))
+    else:
+        exit("Will not remove Temp Directory! Please Manually delete directory %s!" % tempDir)
+else:
+    try:
+       makedirs(tempDir)
+    except IOError as e:
+        print("({})".format(e))
 
 mainMenu()
