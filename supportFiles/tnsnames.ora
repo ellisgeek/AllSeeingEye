@@ -1,0 +1,9 @@
+VGER = 
+  (DESCRIPTION = 
+    (ADDRESS_LIST = 
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 74.217.12.23)(PORT = 1521)) 
+    ) 
+    (CONNECT_DATA = 
+      (SID = VGER) 
+    ) 
+  ) 

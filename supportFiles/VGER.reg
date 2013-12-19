@@ -1,0 +1,18 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI\%NAME%]
+"Driver"="C:\\WINDOWS\\system32\\msorcl32.dll"
+"DSN"="VGER"
+"Description"="ExLibris Voyager Instance"
+"UID"=""
+"PWD"=""
+"SERVER"="VGER"
+"BufferSize"="65535"
+"SynonymColumns"="1"
+"Remarks"="0"
+"StdDayOfWeek"="1"
+"GuessTheColDef"="0"
+"StripTrailingZero"="0"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI\ODBC Data Sources]
+"%NAME%"="Microsoft ODBC for Oracle"
